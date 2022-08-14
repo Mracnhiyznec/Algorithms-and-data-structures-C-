@@ -1,0 +1,33 @@
+#include <iostream>
+using namespace std;
+void mysort(int array[], int left, int right){
+    if (left > right) return;
+    int i = left;
+    int j = right;
+    int p = array[(i + j) / 2];
+    while (i <= j){
+        while (array[i] > p) {i++;}
+        while (array[j] < p) {j--;}
+        if (i <= j) {
+            int temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+            i++;
+            j--;
+        }
+    }
+    mysort(array, left, j);
+    mysort(array, i, right);
+}
+int main() {
+    const int N=10;
+    int a[N];
+    for(int i=0;i<N;i++){
+        cin>>a[i];
+    }
+    mysort(a,0,N-1);
+    for(int i=0;i<N;i++){
+        cout<<a[i]<<" ";
+    }
+    return 0;
+}
