@@ -1154,6 +1154,18 @@ BigInteger operator / (BigInteger &a, BigInteger &b){
     while (c.number.size() > 1 && !c.number.back()){
         c.number.pop_back();
     }
+    if (a.sgn && b.sgn){
+        c.sgn = true;
+    }
+    if (a.sgn && !b.sgn){
+        c.sgn = false;
+    }
+    if (!a.sgn && b.sgn){
+        c.sgn = false;
+    }
+    if (!a.sgn && !b.sgn){
+        c.sgn = true;
+    }
     return c;
 }
 ostream& operator << (ostream &os, BigInteger &a) {
@@ -1186,7 +1198,7 @@ istream& operator >> (istream &in, BigInteger &a) {
 void solve(){
     BigInteger a, b, c;
     cin >> a >> b;
-    a = a * b;
+    a = a / b;
     cout << a;
 }
 int main(){
