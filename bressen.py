@@ -51,7 +51,7 @@ def bresenham_y(x0, y0, x1, y1):
 def bressenhame_circle(xc, yc, r):
     dots = []
     x, y = 0, r
-    F = 3 - 2 * r
+    F = 1 - r
 
     while x <= y:
         dots.extend([
@@ -61,10 +61,10 @@ def bressenhame_circle(xc, yc, r):
             (xc + y, yc - x), (xc - y, yc - x)
         ])
         if F < 0:
-            F += 4 * x + 6
+            F += 2 * x + 3
         else:
-            F += 4 * (x - y) + 10
             y -= 1
+            F += 2 * (x - y) + 5
         x += 1
     return dots
 
@@ -74,31 +74,25 @@ def plot_bresenham(x0: int, y0: int, x1: int, y1: int):
     else:
         lst = bresenham_y(x0,y0,x1,y1)
     print("Points:", lst)
-    # Собираем все координаты
     xs = [x for x, y in lst]
     ys = [y for x, y in lst]
 
-    # Определяем границы сетки
     min_x, max_x = min(xs), max(xs)
     min_y, max_y = min(ys), max(ys)
 
-    # Создаём матрицу для отображения
     grid = np.zeros((max_y - min_y + 1, max_x - min_x + 1), dtype=int)
 
-    # Заполняем матрицу
     for x, y in lst:
-        grid[y - min_y, x - min_x] = 1  # инверсия Y для правильного отображения
+        grid[y - min_y, x - min_x] = 1
 
     # Создаём фигуру
     plt.figure(figsize=(8, 8))
 
-    # Отображаем матрицу как изображение
     plt.imshow(grid,
                cmap='binary',
                origin='lower',
                extent=[min_x - 0.5, max_x + 0.5, min_y - 0.5, max_y + 0.5])
 
-    # Настройки внешнего вида
     plt.xticks(np.arange(min_x, max_x + 1))
     plt.yticks(np.arange(min_y, max_y + 1))
     plt.grid(which='both', color='gray', linestyle='-', linewidth=0.5)
@@ -111,31 +105,24 @@ def plot_bresenham(x0: int, y0: int, x1: int, y1: int):
 
 def plot_bressenhame_circle(xc, yc, r):
     lst = bressenhame_circle(xc, yc, r)
-    # Собираем все координаты
     xs = [x for x, y in lst]
     ys = [y for x, y in lst]
 
-    # Определяем границы сетки
     min_x, max_x = min(xs), max(xs)
     min_y, max_y = min(ys), max(ys)
 
-    # Создаём матрицу для отображения
     grid = np.zeros((max_y - min_y + 1, max_x - min_x + 1), dtype=int)
 
-    # Заполняем матрицу
     for x, y in lst:
-        grid[y - min_y, x - min_x] = 1  # инверсия Y для правильного отображения
+        grid[y - min_y, x - min_x] = 1
 
-    # Создаём фигуру
     plt.figure(figsize=(8, 8))
 
-    # Отображаем матрицу как изображение
     plt.imshow(grid,
                cmap='binary',
                origin='lower',
                extent=[min_x - 0.5, max_x + 0.5, min_y - 0.5, max_y + 0.5])
 
-    # Настройки внешнего вида
     plt.xticks(np.arange(min_x, max_x + 1))
     plt.yticks(np.arange(min_y, max_y + 1))
     plt.grid(which='both', color='gray', linestyle='-', linewidth=0.5)
@@ -144,8 +131,8 @@ def plot_bressenhame_circle(xc, yc, r):
     plt.show()
 
 
-# Пример использования:
 if __name__ == '__main__':
+    print("Введите 1 если отрезок, 2 если окружность")
     type = int(input())
     if (type == 1):
         x0 = int(input("x0: "))
@@ -154,7 +141,7 @@ if __name__ == '__main__':
         y1 = int(input("y1: "))
         plot_bresenham(x0, y0, x1, y1)
     else:
-        xc = int(input())
-        yc = int(input())
-        r = int(input())
+        xc = int(input("xc: "))
+        yc = int(input("yc: "))
+        r = int(input("r: "))
         plot_bressenhame_circle(xc,yc,r)
