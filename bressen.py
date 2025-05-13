@@ -3,14 +3,8 @@ import numpy as np
 
 
 def bresenham_x(x0, y0, x1, y1):
-    if (y0 >= y1):
-        add_y = -1
-    else:
-        add_y = 1
-    if (x0 <= x1):
-        add_x = 1
-    else:
-        add_x = -1
+    add_y = -1 if y0 >= y1 else 1
+    add_x = 1 if x0 <= x1 else -1
     error = 0
     to_add = abs(y0 - y1) + 1
     dots = []
@@ -19,21 +13,16 @@ def bresenham_x(x0, y0, x1, y1):
         dots.append((x0, y0))
         x0 += add_x
         error += to_add
-        if error >= (zap):
+        if error >= zap:
             y0 += add_y
-            error -= (zap)
+            error -= zap
     dots.append((x0, y0))
     return dots
 
+
 def bresenham_y(x0, y0, x1, y1):
-    if (y0 >= y1):
-        add_y = -1
-    else:
-        add_y = 1
-    if (x0 <= x1):
-        add_x = 1
-    else:
-        add_x = -1
+    add_y = -1 if y0 >= y1 else 1
+    add_x = 1 if x0 <= x1 else -1
     error = 0
     to_add = abs(x0 - x1) + 1
     dots = []
@@ -42,17 +31,17 @@ def bresenham_y(x0, y0, x1, y1):
         dots.append((x0, y0))
         y0 += add_y
         error += to_add
-        if error >= (zap):
+        if error >= zap:
             x0 += add_x
-            error -= (zap)
+            error -= zap
     dots.append((x0, y0))
     return dots
 
-def bressenhame_circle(xc, yc, r):
+
+def bresenham_circle(xc, yc, r):
     dots = []
     x, y = 0, r
     F = 1 - r
-
     while x <= y:
         dots.extend([
             (xc + x, yc + y), (xc - x, yc + y),
@@ -68,73 +57,70 @@ def bressenhame_circle(xc, yc, r):
         x += 1
     return dots
 
+
+
 def plot_bresenham(x0: int, y0: int, x1: int, y1: int):
-    if (abs(x0-x1) >= abs(y0-y1)):
-        lst = bresenham_x(x0, y0, x1, y1)
-    else:
-        lst = bresenham_y(x0,y0,x1,y1)
-    print("Points:", lst)
-    xs = [x for x, y in lst]
-    ys = [y for x, y in lst]
+    lst = bresenham_x(x0, y0, x1, y1) if abs(x0 - x1) >= abs(y0 - y1) else bresenham_y(x0, y0, x1, y1)
+    xs, ys = zip(*lst)
 
-    min_x, max_x = min(xs), max(xs)
-    min_y, max_y = min(ys), max(ys)
-
-    grid = np.zeros((max_y - min_y + 1, max_x - min_x + 1), dtype=int)
-
+    grid = np.zeros((max(ys) - min(ys) + 1, max(xs) - min(xs) + 1), dtype=int)
     for x, y in lst:
-        grid[y - min_y, x - min_x] = 1
+        grid[y - min(ys), x - min(xs)] = 1
 
-    # Создаём фигуру
     plt.figure(figsize=(8, 8))
-
     plt.imshow(grid,
                cmap='binary',
                origin='lower',
-               extent=[min_x - 0.5, max_x + 0.5, min_y - 0.5, max_y + 0.5])
+               extent=[min(xs) - 0.5, max(xs) + 0.5, min(ys) - 0.5, max(ys) + 0.5],
+               label='Bresenham')
 
-    plt.xticks(np.arange(min_x, max_x + 1))
-    plt.yticks(np.arange(min_y, max_y + 1))
-    plt.grid(which='both', color='gray', linestyle='-', linewidth=0.5)
+    plt.plot([x0, x1], [y0, y1], linestyle='--', linewidth=1.5, label='Ровная линия')
+
+    plt.xticks(np.arange(min(xs), max(xs) + 1))
+    plt.yticks(np.arange(min(ys), max(ys) + 1))
+    plt.grid(which='both', linestyle='-', linewidth=0.4)
     plt.gca().set_aspect('equal')
-    plt.title(f'Bresenham line from ({x0}, {y0}) to ({x1}, {y1})')
+    plt.legend()
+    plt.title(f'Line from ({x0}, {y0}) to ({x1}, {y1})')
     plt.xlabel('x'), plt.ylabel('y')
     plt.show()
 
 
+def plot_bresenham_circle(xc: int, yc: int, r: int):
+    lst = bresenham_circle(xc, yc, r)
+    xs, ys = zip(*lst)
 
-def plot_bressenhame_circle(xc, yc, r):
-    lst = bressenhame_circle(xc, yc, r)
-    xs = [x for x, y in lst]
-    ys = [y for x, y in lst]
-
-    min_x, max_x = min(xs), max(xs)
-    min_y, max_y = min(ys), max(ys)
-
-    grid = np.zeros((max_y - min_y + 1, max_x - min_x + 1), dtype=int)
-
+    grid = np.zeros((max(ys) - min(ys) + 1, max(xs) - min(xs) + 1), dtype=int)
     for x, y in lst:
-        grid[y - min_y, x - min_x] = 1
+        grid[y - min(ys), x - min(xs)] = 1
 
     plt.figure(figsize=(8, 8))
-
     plt.imshow(grid,
                cmap='binary',
                origin='lower',
-               extent=[min_x - 0.5, max_x + 0.5, min_y - 0.5, max_y + 0.5])
+               extent=[min(xs) - 0.5, max(xs) + 0.5, min(ys) - 0.5, max(ys) + 0.5],
+               label='Bresenham')
 
-    plt.xticks(np.arange(min_x, max_x + 1))
-    plt.yticks(np.arange(min_y, max_y + 1))
-    plt.grid(which='both', color='gray', linestyle='-', linewidth=0.5)
+    theta = np.linspace(0, 2 * np.pi, 720)
+    plt.plot(xc + r * np.cos(theta),
+             yc + r * np.sin(theta),
+             linestyle='--', linewidth=1.5, label='Идеальная окружность')
+
+    plt.xticks(np.arange(min(xs), max(xs) + 1))
+    plt.yticks(np.arange(min(ys), max(ys) + 1))
+    plt.grid(which='both', linestyle='-', linewidth=0.4)
     plt.gca().set_aspect('equal')
+    plt.legend()
+    plt.title(f'Circle center=({xc}, {yc}), r={r}')
     plt.xlabel('x'), plt.ylabel('y')
     plt.show()
+
 
 
 if __name__ == '__main__':
-    print("Введите 1 если отрезок, 2 если окружность")
-    type = int(input())
-    if (type == 1):
+    print("Введите 1, если отрезок, 2 — если окружность")
+    choice = int(input())
+    if choice == 1:
         x0 = int(input("x0: "))
         y0 = int(input("y0: "))
         x1 = int(input("x1: "))
@@ -144,4 +130,4 @@ if __name__ == '__main__':
         xc = int(input("xc: "))
         yc = int(input("yc: "))
         r = int(input("r: "))
-        plot_bressenhame_circle(xc,yc,r)
+        plot_bresenham_circle(xc, yc, r)
