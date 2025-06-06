@@ -1,8 +1,3 @@
-"""
-Лабораторная работа: численное решение краевой задачи (вариант 17)
-Ракушин Никита, группа ПМИ-33
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -26,11 +21,6 @@ def x_exact(t):
 
 # метод прогонки
 def solve_fd_variant17(N, a=0.0, b=1.0):
-    """
-    Вариант 17:  ẍ – 5ẋ = –2 t²,     ẋ(0)=1,  x(1)=0
-    Решение методом конечных разностей и прогонки.
-    Возвращает массив узлов t и вычисленные значения x.
-    """
     h = (b - a) / N                          # шаг сетки
     t = np.linspace(a, b, N + 1)             # узлы t₀…t_N
 
@@ -63,7 +53,7 @@ def solve_fd_variant17(N, a=0.0, b=1.0):
 
 
 
-
+# метод стрельбы
 def solve_shooting_variant17(N, a=0.0, b=1.0):
     t_vals = np.linspace(a, b, N + 1)
     h = (b - a) / N
@@ -109,23 +99,22 @@ def solve_shooting_variant17(N, a=0.0, b=1.0):
     return t_vals, x_sh
 
 if __name__ == "__main__":
-    N = 500                              # число разбиений сетки
+    N = 500                           
     t_fd, x_fd = solve_fd_variant17(N)
     t_sh, x_sh = solve_shooting_variant17(N)
     x_ex = x_exact(t_fd)
 
-    # --- построение графиков -------------------------------------------
+
     plt.figure(figsize=(7, 4))
 
-    plt.plot(t_fd, x_ex, color="black", linewidth=2.0, label="Точное решение")  # чёрная тонкая линия
-    plt.plot(t_fd, x_fd, '--' ,color="tab:red", linewidth=2.0, label="Конечные разности")  # красная тонкая
-    plt.plot(t_sh, x_sh, ':',  color="tab:blue", linewidth=2.0, label="Метод стрельбы")  # синяя тонкая
+    plt.plot(t_fd, x_ex, color="black", linewidth=2.0, label="Точное решение")  
+    plt.plot(t_fd, x_fd, '--' ,color="tab:red", linewidth=2.0, label="Конечные разности") 
+    plt.plot(t_sh, x_sh, ':',  color="tab:blue", linewidth=2.0, label="Метод стрельбы")  
 
-    plt.title("Вариант 17: сравнение решений")
+    plt.title("сравнение решений")
     plt.xlabel("t")
     plt.ylabel("x(t)")
-    plt.grid(True, linestyle=":") 
+    plt.grid(True, linestyle=":")
     plt.legend()
     plt.tight_layout()
     plt.show()
-
