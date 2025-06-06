@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 # 1. Параметры сетки
 hx = hy = 0.1                      # шаг сетки
@@ -41,11 +42,35 @@ for k in range(max_it):
     u = u_new
 
 # 4. График
-plt.figure(figsize=(8, 6))
-plt.title('Приближённое решение u(x, y) для варианта 1')
-plt.xlabel('x')
-plt.ylabel('y')
-plt.imshow(np.flipud(u.T), extent=[x_min, x_max, y_min, y_max],
-           origin='lower', aspect='auto')
-plt.colorbar(label='u')
+fig = plt.figure(figsize=(10, 8))
+ax = fig.add_subplot(111, projection='3d')
+
+# Готовим данные для поверхности (уже в правильной системе координат)
+X_plot, Y_plot = np.meshgrid(x, y, indexing='ij')
+Z_plot = u  # значения решения
+
+# Рисуем поверхность с цветовой кодировкой
+surf = ax.plot_surface(X_plot, Y_plot, Z_plot,
+                       cmap='viridis',      # цветовая схема
+                       rstride=1,           # шаг по строкам
+                       cstride=1,           # шаг по столбцам
+                       linewidth=0,
+                       antialiased=True,
+                       alpha=0.8)
+
+# Настройка осей и меток
+ax.set_title('Приближённое решение u(x, y) для варианта 1', pad=15)
+ax.set_xlabel('x', labelpad=10)
+ax.set_ylabel('y', labelpad=10)
+ax.set_zlabel('u', labelpad=10)
+
+# Цветовая шкала
+cbar = fig.colorbar(surf, ax=ax, shrink=0.6, aspect=10)
+cbar.set_label('Значение u')
+
+# Оптимальный угол обзора
+ax.view_init(elev=30, azim=-45)
+
+# Показываем график
+plt.tight_layout()
 plt.show()
