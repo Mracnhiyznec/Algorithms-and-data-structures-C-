@@ -80,13 +80,11 @@ void solve(){
         old_lambd = now_lambd;
         now_lambd = product(xn, x) / product(x, x);
     }
-//    for (int i = 0; i < 100; i++){
-//        xn = vect_product(A, x);
-//        x = xn;
-//        normalize(x);
-//    }
-//    xn = vect_product(A, x);
-    cout << "Наибольшее по модулю собственное значение: " << fixed << setprecision(10) << now_lambd;
+    cout << "Наибольшее по модулю собственное значение: " << fixed << setprecision(10) << now_lambd << '\n';
+    cout << "Собственный вектор, соответсвтующий собственному максимальному собственному значению\n";
+    for (int i =0; i < x.size(); i++){
+        cout << fixed << setprecision(10) << x[i] << " ";
+    }
 }
 int main() {
     ios_base::sync_with_stdio(false);
